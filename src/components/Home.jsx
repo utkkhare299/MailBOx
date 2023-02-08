@@ -1,72 +1,93 @@
-import React from 'react'
-import { ListGroup } from 'react-bootstrap'
-import Button  from 'react-bootstrap/Button'
+// import React from 'react'
+// import { ListGroup } from 'react-bootstrap'
+// import Button  from 'react-bootstrap/Button'
 
-const tours = [
-  {
-    name : 'DTE ENERGY MUSIC THEATRE',
-    date : 'JUL 16',
-    venue : 'DETROIT, MI'
-  },
-  {
-    name : 'BUDWEISER STAGE',
-    date : 'JUL 19',
-    venue : 'TORONTO,ON'
-  },
-  {
-    name : 'JIGGY LUBE LIVE',
-    date : 'JUL 22',
-    venue : 'BRISTOW, VA'
-  },
-  {
-    name : 'AK-CHIN PAVILION',
-    date : 'JUL 29',
-    venue : 'PHOENIX, AZ'
-  },
-  {
-    name : 'T-MOBILE ARENA',
-    date : 'AUG 2',
-    venue : ' LAS VEGAS, NV'
-  },
-  {
-    name : 'CONCORD PAVILION',
-    date : 'AUG 7',
-    venue : 'CONCORD, CA'
-  },
-]
+// const tours = [
+//   {
+//     name : 'DTE ENERGY MUSIC THEATRE',
+//     date : 'JUL 16',
+//     venue : 'DETROIT, MI'
+//   },
+//   {
+//     name : 'BUDWEISER STAGE',
+//     date : 'JUL 19',
+//     venue : 'TORONTO,ON'
+//   },
+//   {
+//     name : 'JIGGY LUBE LIVE',
+//     date : 'JUL 22',
+//     venue : 'BRISTOW, VA'
+//   },
+//   {
+//     name : 'AK-CHIN PAVILION',
+//     date : 'JUL 29',
+//     venue : 'PHOENIX, AZ'
+//   },
+//   {
+//     name : 'T-MOBILE ARENA',
+//     date : 'AUG 2',
+//     venue : ' LAS VEGAS, NV'
+//   },
+//   {
+//     name : 'CONCORD PAVILION',
+//     date : 'AUG 7',
+//     venue : 'CONCORD, CA'
+//   },
+// ]
+import { useState, useContext, useEffect, useRef } from "react";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import EmailForm from "./EmailForm";
+import Inbox from "./Inbox";
+import Sidebar from "./Sidebar";
+import { AppContext } from "../context/AppContext";
 
 function Home() {
+  const [recievedMails, setRecievedMails] = useState([]);
+  const [show, setShow] = useState(false);
+  const { user } = useContext(AppContext);
+  const userEmail = user?.email?.replace(/\.|@/g, "");
+
+  useEffect(() => {
+    getMails();
+  }, []);
+
+  const getMails = async () => {
+    const url = `https://expense-d1606-default-rtdb.firebaseio.com/${userEmail}/recieved-mails.json`;
+
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+      const mails = [];
+      for (let key in data) {
+        mails.push({
+          id: key,
+          content: data[key].content,
+          sentBy: data[key].sentBy,
+        });
+      }
+      setRecievedMails(mails);
+    } catch (error) {
+      alert(error.message);
+    }
+  };
   return (
-    < >
-      <div className='home-header d-flex flex-column justify-content-around align-items-center'>
-        <h1>The Generics</h1>
-      <Button variant="outline-info">Get our latest Album</Button>
-      <a href="#">
-
-        <img src="https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fwww.pngall.com%2Fwp-content%2Fuploads%2F5%2FPlay-Button-PNG-Image-HD.png&f=1&nofb=1&ipt=03837148f16225f3e249329fae152ae37322afc0d2c2672b0b4e0bd921850e8f&ipo=images" />
-      </a>
-
+    <main>
+      <h1 className="mb-4">Welcome to your Mail Box</h1>
+      <div>
+        <Row className="vh-100">
+          <Col md={4} className=" shadow-lg bg-dark bg-gradient">
+            <Sidebar setShow={setShow} />
+          </Col>
+          <Col md={8}>
+            <EmailForm setShow={setShow} show={show} />
+            <Inbox mails={recievedMails} />
+          </Col>
+        </Row>
       </div>
-      <main className="d-flex align-items-center flex-column mb-5">
-
-      <h1 className='mb-5 mt-5'>TOURS</h1>
-        {
-          tours.map(tour => (
-            <ListGroup key={tour.date} horizontal>
-
-              <ListGroup.Item>{tour.date}</ListGroup.Item>
-              <ListGroup.Item>{tour.venue}</ListGroup.Item>
-              <ListGroup.Item>{tour.name}</ListGroup.Item>
-              <ListGroup.Item>
-                <Button variant='info' className='text-white'>BUY TICKETS</Button>
-              </ListGroup.Item>
-            </ListGroup>
-          ))
-        }
-      </main>
-
-    </>
-  )
+    </main>
+  );
 }
 
-export default Home
+export default Home;
