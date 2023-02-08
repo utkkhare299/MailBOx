@@ -3,10 +3,20 @@ body {
     color: white;
     margin: 0;
     text-align: center;
+    overflow-x: hidden;
 }
 
 .auth form {
     max-width: 800px;
     margin-inline: auto;
     text-align: left;
+}
+
+/* .container {
+    max-width: 800px;
+
+} */
+.html {
+    max-height: 2rem;
+    overflow-y: hidden;
 }
