@@ -25,7 +25,8 @@ function EmailForm({ show, setShow }) {
       method: "POST",
       body: JSON.stringify({
         content: value,
-        sendTo,
+        sendTo : emailRef.current.value,
+        read: false
       }),
       headers: {
         "Content-Type": "application/json",
@@ -69,6 +70,7 @@ function EmailForm({ show, setShow }) {
               type="email"
               placeholder="Enter email"
               ref={emailRef}
+              minLength={8} 
               required
               name="email"
             />
