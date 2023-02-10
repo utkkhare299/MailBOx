@@ -2,11 +2,17 @@ import Button from "react-bootstrap/Button";
 import { AppContext } from "../context/AppContext";
 import { useNavigate } from "react-router-dom";
 import ListGroup from "react-bootstrap/ListGroup";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 
 function Inbox({ mails }) {
-  const { changeReadStatus, deleteMail } = useContext(AppContext);
+  const { changeReadStatus, deleteMail, getMails } = useContext(AppContext);
   const navigate = useNavigate();
+  useEffect(() => {
+    setInterval(() => {
+      getMails();
+    }, 2000);
+  }, []);
+
   const onClick = (mail) => {
     changeReadStatus(mail);
     navigate(`/full-mail/${mail.id}`, { state: { mail } });

@@ -120,6 +120,7 @@ const ContextProvider = (props) => {
     user,
     login: loginHandler,
     getMails,
+    getSentMails,
     sentMails,
     deleteMail,
     totalUnread,
