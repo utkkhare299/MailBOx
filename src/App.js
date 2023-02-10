@@ -4,6 +4,7 @@ import "./App.css";
 import Home from "./components/Home";
 import Signup from "./components/Signup";
 import Login from "./components/Login";
+import FullMail from "./components/FullMail";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/" element={<Login />} />
         <Route path="/home" element={<Home />} />
+        <Route path="/full-mail/:id" element={<FullMail />} />
       </Routes>
     </div>
   );

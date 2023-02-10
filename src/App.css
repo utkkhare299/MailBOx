@@ -19,4 +19,13 @@ body {
 .html {
     max-height: 2rem;
     overflow-y: hidden;
+       color: black;
+}
+link {
+    cursor : pointer;
+
+}
+
+.link:hover {
+    opacity: 0.8;
 }
