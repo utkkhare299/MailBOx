@@ -39,6 +39,24 @@ const ContextProvider = (props) => {
       alert(error.message);
     }
   };
+  const deleteMail = async (id) => {
+    const userEmail = user?.email?.replace(/\.|@/g, "");
+    const url =`https://expense-d1606-default-rtdb.firebaseio.com/${userEmail}/recieved-mails/${id}.json`;
+
+    const options = {
+      method: "DELETE",
+    };
+
+    try {
+      const res = await fetch(url, options);
+      await res.json();
+      const newMails = recievedMails.filter((mail) => mail.id !== id);
+      setRecievedMails(newMails);
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
+
   const loginHandler = (user) => {
     setUser(user);
     localStorage.setItem("user", JSON.stringify(user));
@@ -48,6 +66,7 @@ const ContextProvider = (props) => {
     user,
     login: loginHandler,
     getMails,
+    deleteMail,
     totalUnread,
     setTotalUnread,
     mails: recievedMails,
