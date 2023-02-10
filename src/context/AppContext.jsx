@@ -13,7 +13,7 @@ const ContextProvider = (props) => {
   useEffect(() => {
     getSentMails();
     getMails();
-  }, []);
+  },[]);
 
   const getMails = async () => {
     const userEmail = user?.email?.replace(/\.|@/g, "");
@@ -53,7 +53,7 @@ const ContextProvider = (props) => {
         mails.push({
           id: key,
           content: data[key].content,
-          sendTo: data[key].sendTo,
+          sendBy: data[key].sendTo,
           read: data[key].read,
         });
       }

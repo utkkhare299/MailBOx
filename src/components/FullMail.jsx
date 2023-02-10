@@ -2,23 +2,19 @@ import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import { Link, useParams, useLocation } from "react-router-dom";
-import { useState, useContext, useEffect } from "react";
-
-import { AppContext } from "../context/AppContext";
+import { Link, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
 import EmailForm from "./EmailForm";
 import Sidebar from "./Sidebar";
 
 function FullMail() {
   const [show, setShow] = useState(false);
   const [mail, setMail] = useState({});
-  const { user } = useContext(AppContext);
   const location = useLocation();
-  let params = useParams();
 
   useEffect(() => {
     setMail(location.state.mail);
-  }, []);
+  }, [location]);
 
   // const fetchMail = async (id) => {
   //   const userEmail = user?.email?.replace(/\.|@/g, "");

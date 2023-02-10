@@ -18,7 +18,7 @@ function Home() {
     if (!user) {
       navigate("/");
     }
-  }, []);
+  }, [user]);
 
   return (
     <main>
