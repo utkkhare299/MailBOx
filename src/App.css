@@ -16,12 +16,12 @@ body {
     max-width: 800px;
 
 } */
-.html {
+.subject {
     max-height: 2.8rem;
     overflow-y: hidden;
        color: black;
 }
-link {
+.link {
     cursor : pointer;
 
 }

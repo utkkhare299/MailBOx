@@ -1,5 +1,5 @@
 import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
+// import "react-quill/dist/quill.snow.css";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
@@ -10,12 +10,13 @@ import { AppContext } from "../context/AppContext";
 function EmailForm({ show, setShow }) {
   const { user } = useContext(AppContext);
   const emailRef = useRef();
+  const subjectRef = useRef();
   const [value, setValue] = useState("");
   const userEmail = user?.email?.replace(/\.|@/g, "");
   const sendTo = emailRef.current?.value?.replace(/\.|@/g, "");
- 
-  const url =  `https://expense-d1606-default-rtdb.firebaseio.com/${userEmail}/sent-mails.json`;
-  const url2 =`https://expense-d1606-default-rtdb.firebaseio.com/${sendTo}/recieved-mails.json`;
+
+  const url = `https://expense-d1606-default-rtdb.firebaseio.com/${userEmail}/sent-mails.json`;
+  const url2 = `https://expense-d1606-default-rtdb.firebaseio.com/${sendTo}/recieved-mails.json`;
 
   const handleClose = () => setShow(false);
 
@@ -24,9 +25,10 @@ function EmailForm({ show, setShow }) {
     const options = {
       method: "POST",
       body: JSON.stringify({
+        sendTo: emailRef.current.value,
+        subject: subjectRef.current.value,
         content: value,
-        sendTo : emailRef.current.value,
-        read: false
+        read: false,
       }),
       headers: {
         "Content-Type": "application/json",
@@ -36,9 +38,10 @@ function EmailForm({ show, setShow }) {
     const options2 = {
       method: "POST",
       body: JSON.stringify({
-        content: value,
         sentBy: user.email,
-        read: false
+        subject: subjectRef.current.value,
+        content: value,
+        read: false,
       }),
       headers: {
         "Content-Type": "application/json",
@@ -46,11 +49,11 @@ function EmailForm({ show, setShow }) {
     };
 
     try {
-      const res = await fetch(url, options);
-      const res2 = await fetch(url2, options2);
-
-      await res.json();
-      await res2.json();
+      const allPromises = await Promise.all([
+        fetch(url, options),
+        fetch(url2, options2),
+      ]);
+      allPromises.forEach((res) => res.json());
       setShow(false);
       alert("Email Sent Succesfully");
     } catch (error) {
@@ -70,9 +73,20 @@ function EmailForm({ show, setShow }) {
               type="email"
               placeholder="Enter email"
               ref={emailRef}
-              minLength={8} 
+              minLength={8}
               required
               name="email"
+            />
+          </Form.Group>
+          <Form.Group controlId="subject">
+            <Form.Label>Subject :</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Enter Subject"
+              ref={subjectRef}
+              minLength={8}
+              required
+              name="subject"
             />
           </Form.Group>
           <ReactQuill theme="snow" value={value} onChange={setValue} />

@@ -2,22 +2,26 @@ import ListGroup from "react-bootstrap/ListGroup";
 import { useContext, useEffect } from "react";
 import { AppContext } from "../context/AppContext";
 import { useNavigate } from "react-router-dom";
-import useFetchData from '../useFetchData';
+// import useFetchData from '../useFetchData'
 
 function SentInbox() {
   const { sentMails, changeReadStatus, getSentMails } = useContext(AppContext);
   const navigate = useNavigate();
+  
   useEffect(() => {
-    setInterval(() => {
+    const interval = setInterval(() => {
       getSentMails();
     }, 2000);
+    return () => {
+      clearInterval(interval);
+    };
   }, []);
   const onClick = (mail) => {
     const sent = true;
     changeReadStatus(mail, sent);
     navigate(`/full-mail/${mail.id}`, { state: { mail } });
   };
-
+// console.log(sentMails)
   return (
     <>
       <h1>Your Mails</h1>
@@ -38,10 +42,7 @@ function SentInbox() {
                 {mail.sendTo}
               </span>
             </p>
-            <div
-              className="html"
-              dangerouslySetInnerHTML={{ __html: mail.content }}
-            ></div>
+            <div className="subject">{mail.subject.substring(0, 30)}...</div>
           </ListGroup.Item>
         ))}
       </ListGroup>

@@ -108,7 +108,7 @@ const Signup = () => {
         </Button>
         <br />
         <Form.Text>
-          Already have an account ? <Link to={"/login"}>Login...</Link>
+          Already have an account ? <Link to={"/"}>Login...</Link>
         </Form.Text>
       </Form>
     </section>

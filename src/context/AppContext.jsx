@@ -13,7 +13,7 @@ const ContextProvider = (props) => {
   useEffect(() => {
     getSentMails();
     getMails();
-  },[]);
+  }, []);
 
   const getMails = async () => {
     const userEmail = user?.email?.replace(/\.|@/g, "");
@@ -26,7 +26,7 @@ const ContextProvider = (props) => {
       for (let key in data) {
         mails.push({
           id: key,
-          content: data[key].content,
+          subject: data[key].subject,
           sentBy: data[key].sentBy,
           read: data[key].read,
         });
@@ -43,8 +43,7 @@ const ContextProvider = (props) => {
   };
   const getSentMails = async () => {
     const userEmail = user?.email?.replace(/\.|@/g, "");
-    const url = `https://fir-99cf8-default-rtdb.asia-southeast1.firebasedatabase.app/${userEmail}/sent-mails.json`;
-
+    const url = `https://expense-d1606-default-rtdb.firebaseio.com/${userEmail}/sent-mails.json`;
     try {
       const res = await fetch(url);
       const data = await res.json();
@@ -52,8 +51,9 @@ const ContextProvider = (props) => {
       for (let key in data) {
         mails.push({
           id: key,
+          subject: data[key].subject,
           content: data[key].content,
-          sendBy: data[key].sendTo,
+          sendTo: data[key].sendTo,
           read: data[key].read,
         });
       }
@@ -63,6 +63,7 @@ const ContextProvider = (props) => {
       });
       setTotalUnreadSent(totalUnreadMessages);
       setSentMails(mails);
+      // console.log(data)
     } catch (error) {
       alert(error.message);
     }
@@ -86,10 +87,10 @@ const ContextProvider = (props) => {
   };
   const changeReadStatus = async (mail, sent = false) => {
     const userEmail = user?.email?.replace(/\.|@/g, "");
-    let url = `https://fir-99cf8-default-rtdb.asia-southeast1.firebasedatabase.app/${userEmail}/recieved-mails/${mail.id}.json`;
+    let url =  `https://expense-d1606-default-rtdb.firebaseio.com/${userEmail}/recieved-mails/${mail.id}.json`;
 
     if (sent) {
-      url = `https://fir-99cf8-default-rtdb.asia-southeast1.firebasedatabase.app/${userEmail}/sent-mails/${mail.id}.json`;
+      url =  `https://expense-d1606-default-rtdb.firebaseio.com/${userEmail}/sent-mails/${mail.id}.json`;
     }
     const options = {
       method: "PATCH",
@@ -128,7 +129,7 @@ const ContextProvider = (props) => {
     changeReadStatus,
     mails: recievedMails,
   };
-
+  console.log(sentMails)
   return (
     <AppContext.Provider value={authContext}>
       {props.children}

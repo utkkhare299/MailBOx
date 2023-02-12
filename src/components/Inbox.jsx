@@ -7,12 +7,16 @@ import { useContext, useEffect } from "react";
 function Inbox({ mails }) {
   const { changeReadStatus, deleteMail, getMails } = useContext(AppContext);
   const navigate = useNavigate();
+
   useEffect(() => {
-    setInterval(() => {
+    const interval = setInterval(() => {
       getMails();
     }, 2000);
-  }, []);
 
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
   const onClick = (mail) => {
     changeReadStatus(mail);
     navigate(`/full-mail/${mail.id}`, { state: { mail } });
@@ -37,10 +41,8 @@ function Inbox({ mails }) {
                 {mail.sentBy}
               </span>
             </p>
-            <div
-              className="html"
-              dangerouslySetInnerHTML={{ __html: mail.content }}
-            ></div>
+            <div className="subject">{mail.subject.substring(0, 30)}...</div>
+
             <Button variant="danger" onClick={() => deleteMail(mail.id)}>
               Delete
             </Button>

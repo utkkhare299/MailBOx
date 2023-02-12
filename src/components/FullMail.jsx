@@ -46,6 +46,7 @@ function FullMail() {
                 {mail.sendTo}
               </Card.Title>
             )}
+                 <Card.Header>{mail.subject}</Card.Header>
             <div
               className="border-bottom mb-2"
               dangerouslySetInnerHTML={{ __html: mail?.content }}
